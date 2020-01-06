@@ -1,0 +1,47 @@
+------------------------------------------------------------------------------------------------
+-- Author:			Alexandre LADRIERE
+-- Name:			Counter.vhd
+-- Date of creation:		30/11/2018
+-- Date of modification:	08/12/2018
+-- Description:			Implementation of a Counter
+------------------------------------------------------------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+library AESLibrary;
+use AESLibrary.state_definition_package.all;
+library source;
+
+entity Counter is
+	port (
+		reset_i : in std_logic; -- reset etat haut
+		ce_i : in std_logic; --clock enable
+		clock_i : in std_logic;
+		cpt_o : out bit4
+	);
+end entity Counter;
+
+architecture Counter_arch of Counter is
+	signal cpt_s : integer range 0 to 15;
+	
+	begin
+		seq_0 : process(clock_i, reset_i, ce_i) 
+			begin 
+				if reset_i = '1' then
+					cpt_s <= 10;
+				elsif clock_i'event and clock_i = '1' then
+					if ce_i = '1' then
+						if cpt_s = 0 then -- pour éviter de décrémenter si le compteur vaut deja 0
+							cpt_s <= cpt_s;
+						else
+							cpt_s <= cpt_s - 1;
+						end if;
+					else 
+						cpt_s <= cpt_s;
+					end if;
+				else
+					cpt_s <= cpt_s;
+				end if;
+		end process;
+	cpt_o <= std_logic_vector(to_unsigned(cpt_s, 4));
+end architecture Counter_arch;

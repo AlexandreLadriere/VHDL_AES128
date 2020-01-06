@@ -1,0 +1,45 @@
+\babel@toc {french}{}
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}Principe de l'algorithme de d\IeC {\'e}chiffrement}{4}
+\contentsline {section}{\numberline {3}Impl\IeC {\'e}mentation des diff\IeC {\'e}rents composants}{6}
+\contentsline {subsection}{\numberline {3.1}InvSBox}{6}
+\contentsline {subsubsection}{\numberline {3.1.1}Principe}{6}
+\contentsline {subsubsection}{\numberline {3.1.2}Impl\IeC {\'e}mentation}{7}
+\contentsline {subsubsection}{\numberline {3.1.3}Tests et r\IeC {\'e}sultats}{7}
+\contentsline {subsection}{\numberline {3.2}invSubBytes}{8}
+\contentsline {subsubsection}{\numberline {3.2.1}Principe}{8}
+\contentsline {subsubsection}{\numberline {3.2.2}Impl\IeC {\'e}mentation}{8}
+\contentsline {subsubsection}{\numberline {3.2.3}Tests et r\IeC {\'e}sultats}{8}
+\contentsline {subsection}{\numberline {3.3}InvAddRoundKey}{9}
+\contentsline {subsubsection}{\numberline {3.3.1}Principe}{9}
+\contentsline {subsubsection}{\numberline {3.3.2}Impl\IeC {\'e}mentation}{10}
+\contentsline {subsubsection}{\numberline {3.3.3}Tests et r\IeC {\'e}sultats}{10}
+\contentsline {subsection}{\numberline {3.4}InvShiftRows}{11}
+\contentsline {subsubsection}{\numberline {3.4.1}Principe}{11}
+\contentsline {subsubsection}{\numberline {3.4.2}Impl\IeC {\'e}mentation}{12}
+\contentsline {subsubsection}{\numberline {3.4.3}Tests et r\IeC {\'e}sultats}{12}
+\contentsline {subsection}{\numberline {3.5}InvMixColumns}{13}
+\contentsline {subsubsection}{\numberline {3.5.1}Principe}{13}
+\contentsline {subsubsection}{\numberline {3.5.2}Impl\IeC {\'e}mentation}{13}
+\contentsline {subsubsection}{\numberline {3.5.3}Tests et r\IeC {\'e}sultats}{15}
+\contentsline {subsection}{\numberline {3.6}Machine d'\IeC {\'e}tat}{16}
+\contentsline {subsubsection}{\numberline {3.6.1}Principe}{16}
+\contentsline {subsubsection}{\numberline {3.6.2}Impl\IeC {\'e}mentation}{16}
+\contentsline {subsubsection}{\numberline {3.6.3}Tests et r\IeC {\'e}sultats}{17}
+\contentsline {subsection}{\numberline {3.7}D\IeC {\'e}compteur}{18}
+\contentsline {subsubsection}{\numberline {3.7.1}Principe}{18}
+\contentsline {subsubsection}{\numberline {3.7.2}Impl\IeC {\'e}mentation}{18}
+\contentsline {subsubsection}{\numberline {3.7.3}Tests et r\IeC {\'e}sultats}{19}
+\contentsline {subsection}{\numberline {3.8}Registre}{19}
+\contentsline {subsubsection}{\numberline {3.8.1}Principe}{19}
+\contentsline {subsubsection}{\numberline {3.8.2}Impl\IeC {\'e}mentation}{19}
+\contentsline {subsubsection}{\numberline {3.8.3}Tests et r\IeC {\'e}sultats}{20}
+\contentsline {subsection}{\numberline {3.9}InvAESRound}{20}
+\contentsline {subsubsection}{\numberline {3.9.1}Principe}{20}
+\contentsline {subsubsection}{\numberline {3.9.2}Impl\IeC {\'e}mentation}{20}
+\contentsline {subsubsection}{\numberline {3.9.3}Tests et r\IeC {\'e}sultats}{22}
+\contentsline {section}{\numberline {4}Impl\IeC {\'e}mentation globale de InvAES}{23}
+\contentsline {subsection}{\numberline {4.1}Principe}{23}
+\contentsline {subsection}{\numberline {4.2}Impl\IeC {\'e}mentation}{23}
+\contentsline {subsection}{\numberline {4.3}Tests et r\IeC {\'e}sultats}{23}
+\contentsline {section}{\numberline {5}Conclusion}{25}

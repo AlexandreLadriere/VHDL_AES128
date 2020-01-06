@@ -1,0 +1,170 @@
+------------------------------------------------------------------------------------------------
+-- Author:			Alexandre LADRIERE
+-- Name:			InvAESRound2.vhd
+-- Date of creation:		05/12/2018
+-- Date of modification:	08/12/2018
+-- Description:			InvAESRound2 for InvAES
+------------------------------------------------------------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+library AESLibrary;
+use AESLibrary.state_definition_package.all;
+library source;
+
+
+entity InvAESRound2 is
+	port (
+		clock_i : in std_logic;
+		currentkey_i : in bit128;
+		currenttext_i : in bit128;
+		enableInvMixColumns_i : in std_logic;
+		enableRoundComputing_i : in std_logic;
+		resetb_i : in std_logic;
+		data_o : out bit128
+	);
+end entity InvAESRound2;
+
+
+architecture InvAESRound2_arch of InvAESRound2 is
+	
+		-- déclaration des compsants
+		component InvShiftRows
+			port (
+				invshiftrows_i : in type_state;
+				invshiftrows_o : out type_state
+			);
+		end component;
+	
+		component InvSubBytes
+			port (
+				invsubbytes_i : in type_state;
+				invsubbytes_o : out type_state
+			);
+		end component;
+		
+		component InvAddRoundKey
+			port (
+				invaddroundkey_i : in type_state;
+				key_i : in type_state;
+				invaddroundkey_o : out type_state
+			);
+		end component;
+	
+		component InvMixColumns
+			port (
+				invmixcolumns_i : in type_state;
+				invmixcolumns_o : out type_state
+			);
+		end component;
+		
+		component Multiplexer_type_state
+			port (
+				enable_i : in std_logic; -- variable permettant de choisir la sortie
+				choix0_i : in type_state; -- matrice qui sera en sortie si enable = 0
+				choix1_i : in type_state; -- matrice qui sera en sortie si enable ='1'
+				resultat_o : out type_state
+			);
+		end component;
+		
+		-- signaux
+		signal currentkey_is : type_state;
+		signal currenttext_is : type_state;
+		signal inter0_s, inter1_s, inter2_s, inter3_s, inter4_s, inter6_s : type_state;
+		signal inter5_s : bit128;
+		
+		-- debut architecture:
+		begin
+		
+		--transformation bit128 en type_state pour currentkey_i et currenttext_i
+		ligne1 : for l in 0 to 3 generate
+		 	colonne1 : for c in 0 to 3 generate
+				currentkey_is(l)(c) <= currentkey_i((127-8*(l+c*4)) downto (128-8*(l+c*4+1)));
+				currenttext_is(l)(c) <= currenttext_i((127-8*(l+c*4)) downto (128-8*(l+c*4+1)));
+			end generate colonne1;
+		end generate ligne1;
+
+
+	
+
+		ISR : InvShiftRows
+    		port map (
+    			invshiftrows_i => currenttext_is,
+    			invshiftrows_o => inter0_s
+		);
+		
+		ISB : InvSubBytes
+		port map (
+			invsubbytes_i => inter0_s,
+			invsubbytes_o => inter1_s
+		);
+		
+		Mul1 : Multiplexer_type_state
+		port map (
+			enable_i => enableRoundComputing_i,
+			choix0_i => currenttext_is,
+			choix1_i => inter1_s,
+			resultat_o => inter2_s
+		);			
+		
+		IARK : InvAddRoundKey
+		port map (
+			invaddroundkey_i => inter2_s,
+			key_i => currentkey_is,
+			invaddroundkey_o => inter3_s
+		);
+		
+		IMC : InvMixColumns
+		port map (
+			invmixcolumns_i => inter3_s,
+			invmixcolumns_o => inter4_s
+		);
+		
+		Mul2 : Multiplexer_type_state
+		port map (
+			enable_i => enableInvMixColumns_i,
+			choix0_i => inter3_s,
+			choix1_i => inter4_s,
+			resultat_o => inter6_s
+		);
+		
+		
+		-- conversion de type_state vers bit128
+		ligne2: for l in 3 downto 0 generate
+			colonne2 : for c in 3 downto 0 generate
+				inter5_s((127-8*(l+c*4)) downto (128-8*(l+c*4+1))) <= inter6_s(l)(c);
+			end generate colonne2;
+		end generate ligne2;
+		
+		
+		-- registre interne
+		comb0 : process (resetb_i, clock_i, inter5_s)
+		begin
+			if resetb_i = '0' then
+				data_o <= (others =>'0');
+			elsif clock_i'event and clock_i = '1' then
+				data_o <= inter5_s;
+			end if;
+		end process comb0;
+	
+end architecture InvAESRound2_arch;
+
+
+
+configuration InvAESRound2_conf of InvAESRound2 is
+	for InvAESRound2_arch
+		for all : InvMixColumns
+			use entity source.InvMixColumns(InvMixColumns_arch);
+		end for;
+		for all : InvSubBytes
+			use entity source.InvSubBytes(InvSubBytes_arch);
+		end for;
+		for all : InvAddRoundKey
+			use entity source.InvAddRoundKey(InvAddRoundKey_arch);
+		end for;
+		for all : InvShiftRows
+			use entity source.InvShiftRows(InvShiftRows_arch);
+		end for;
+	end for;
+end InvAESRound2_conf;
+

@@ -1,0 +1,71 @@
+# //  ModelSim SE-64 10.0 Dec  4 2010 Linux 2.6.32-431.el6.x86_64
+# //
+# //  Copyright 1991-2010 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND PROPRIETARY INFORMATION
+# //  WHICH IS THE PROPERTY OF MENTOR GRAPHICS CORPORATION OR ITS
+# //  LICENSORS AND IS SUBJECT TO LICENSE TERMS.
+# //
+# vsim bench.InvAES_tb 
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by:   Hostname:   ProcessID: 2
+#           Attempting to use alternate WLF file "./wlftudVOAC".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlftudVOAC
+# ** Note: (vsim-3812) Design is being optimized...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading aeslibrary.state_definition_package(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading work.invaes_tb(invaes_tb_arch)#1
+# Loading source.invaesround(invaesround_arch)#1
+# Loading source.invsubbytes(invsubbytes_arch)#1
+# Loading source.invmixonecolumn(invmixonecolumn_arch)#1
+# A time value could not be extracted from the current line
+# A time value could not be extracted from the current line
+add wave \
+{sim:/invaes_tb/DUT/data_i } \
+{sim:/invaes_tb/DUT/data_o } 
+radix -h
+# hexadecimal
+run 2000 ns
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(3)/colonne(3)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(3)/colonne(2)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(3)/colonne(1)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(3)/colonne(0)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(2)/colonne(3)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(2)/colonne(2)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(2)/colonne(1)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(2)/colonne(0)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(1)/colonne(3)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(1)/colonne(2)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(1)/colonne(1)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(1)/colonne(0)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(0)/colonne(3)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(0)/colonne(2)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(0)/colonne(1)/matrice
+# ** Warning: NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/IAR/ISB/ligne(0)/colonne(0)/matrice
+# ** Warning: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, the result will be 'X'(es).
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/KET
+# ** Warning: CONV_INTEGER: There is an 'U'|'X'|'W'|'Z'|'-' in an arithmetic operand, and it has been converted to 0.
+#    Time: 0 ns  Iteration: 0  Instance: /invaes_tb/DUT/KET

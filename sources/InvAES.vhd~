@@ -1,0 +1,182 @@
+------------------------------------------------------------------------------------------------
+-- Author:			Alexandre LADRIERE
+-- Name:			InvAES.vhd
+-- Date of creation:		07/12/2018
+-- Date of modification:	07/12/2018
+-- Description:			InvAES global component
+------------------------------------------------------------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+library AESLibrary;
+use AESLibrary.state_definition_package.all;
+library source;
+
+entity InvAES is 
+	port (
+		start_i : in std_logic;
+		clock_i : in std_logic;
+		reset_i : in std_logic; -- reset etat haut
+		data_i : in bit128;
+		data_o : out bit128;
+		aes_on_o : out std_logic
+	);
+end entity InvAES;
+
+architecture InvAES_arch of InvAES is
+
+	component Counter is
+		port (
+			reset_i : in std_logic; -- reset etat haut
+			ce_i : in std_logic; --clock enable
+			clock_i : in std_logic;
+			cpt_o : out bit4
+		);
+	end component;
+	
+	component FSM_InvAES is
+		port (
+			clock_i : in std_logic;
+			resetb_i : in std_logic; -- reset etat bas
+			round_i : in bit4; -- entree correspondant au compteur de round
+			start_i : in std_logic;
+			done_o : out std_logic; -- indique la fin du calcul
+			enableCounter_o : out std_logic;
+			enableInvMixColumns_o : out std_logic;
+			enableOutput_o : out std_logic; -- autorise ou non l'envoie des données dechifree
+			enableRoundcomputing_o : out std_logic; -- autorise ou non InvSubBytes et InvShiftRows
+			getciphertext_o : out std_logic;
+			resetCounter_o : out std_logic
+		);
+	end component;
+	
+	component KeyExpansion_table is
+		port (
+			round_i : in bit4;
+			expansion_key_o : out bit128
+		);
+	end component;
+	
+	component InvAESRound2 is 
+		port (
+			clock_i : in std_logic;
+			currentkey_i : in bit128;
+			currenttext_i : in bit128;
+			enableInvMixColumns_i : in std_logic;
+			enableRoundComputing_i : in std_logic;
+			resetb_i : in std_logic; -- reset etat bas
+			data_o : out bit128
+		);
+	end component;
+	
+	component RTL_REG is
+		port (
+			clockREG_i : in std_logic;
+			resetbREG_i : in std_logic; -- reset etat bas
+			enableREG_i : in std_logic;
+			D_i : in bit128;
+			Q_o : out bit128
+		);
+	end component;
+	
+	signal enableCounter_os : std_logic;
+	signal enableInvMixColumns_os : std_logic;
+	signal resetCounter_os : std_logic;
+	signal enableOutput_os : std_logic;
+	signal enableRoundComputing_os : std_logic;
+	signal getcyphertext_os : std_logic;
+	signal done_s : std_logic;
+	signal count_s : bit4;
+	signal expansion_key_os : bit128;
+	signal INInvAESRound_is : bit128;
+	signal OUTInvAESRound_os : bit128;
+	signal resetb_is : std_logic := '0'; -- initialisation à 0 et pas directement not(reset_i) pour éviter un Warning lors de la compilation
+	
+	begin
+		
+		C : Counter
+			port map (
+				reset_i => resetCounter_os,
+				ce_i => enableCounter_os,
+				clock_i => clock_i,
+				cpt_o => count_s
+			);
+	
+		FSM : FSM_InvAES
+			port map (
+				clock_i => clock_i,
+				resetb_i => resetb_is,
+				round_i => count_s,
+				start_i => start_i,
+				done_o => aes_on_o,
+				enableCounter_o => enableCounter_os,
+				enableInvMixColumns_o => enableInvMixColumns_os,
+				enableOutput_o => enableOutput_os,
+				enableRoundcomputing_o => enableRoundComputing_os,
+				getciphertext_o => getcyphertext_os,
+				resetCounter_o => resetCounter_os
+			);
+			
+		KET : KeyExpansion_table
+			port map (
+				round_i => count_s,
+				expansion_key_o => expansion_key_os
+			);
+			
+		IAR : InvAESRound2
+			port map (
+				clock_i => clock_i,
+				currentkey_i => expansion_key_os,
+				currenttext_i => INInvAESRound_is,
+				enableInvMixColumns_i => enableInvMixColumns_os,
+				enableRoundComputing_i => enableRoundComputing_os,
+				resetb_i => resetb_is,
+				data_o => OUTInvAESRound_os
+			);
+			
+		REG : RTL_REG
+			port map (
+				clockREG_i => clock_i,
+				resetbREG_i => resetb_is,
+				enableREG_i => enableOutput_os,
+				D_i => OUTInvAESRound_os,
+				Q_o => data_o
+			);
+			
+		-- passaga a un reset etat bas	
+		resetb_is <= not(reset_i);
+			
+		-- process sequentiel pour le multiplexeur RTL_MUX 
+		seq0 : process(getcyphertext_os, OUTInvAESRound_os, data_i)
+			begin
+				if getcyphertext_os = '1' then
+					InInvAESRound_is <= data_i;
+				else
+					INInvAESRound_is <= OUTInvAESRound_os;
+				end if;
+		end process seq0;
+				
+	
+end architecture InvAES_arch;
+
+configuration InvAES_conf of InvAES is
+	for InvAES_arch
+		for all : Counter
+			use entity source.Counter(Counter_arch);
+		end for;
+		for all : FSM_InvAES
+			use entity source.FSM_InvAES(FSM_InvAES_arch);
+		end for;
+		for all : KeyExpansion_table
+			use entity source.KeyExpansion_table(KeyExpansion_table_arch);
+		end for;
+    		for all : InvAESRound2
+			use configuration source.InvAESRound2_conf;
+		end for;
+		for all : RTL_REG
+			use entity source.RTL_REG(RTL_REG_arch);
+		end for;
+	end for;
+end configuration InvAES_conf;
+
+

@@ -1,0 +1,70 @@
+------------------------------------------------------------------------------------------------
+-- Author:			Alexandre LADRIERE
+-- Name:			FSM_InvAES.vhd
+-- Date of creation:		28/11/2018
+-- Date of modification:	08/12/2018
+-- Description:			FSM for InvAES
+------------------------------------------------------------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+--use IEEE.numeric_std.all;
+library AESLibrary;
+use AESLibrary.state_definition_package.all;
+library source;
+
+entity FSM_InvAES_tb is
+end entity FSM_InvAES_tb;
+
+architecture FSM_InvAES_tb_arch of FSM_InvAES_tb is 
+
+	component FSM_InvAES 
+		port (
+			clock_i : in std_logic;
+			resetb_i : in std_logic;
+			round_i : in bit4; -- entree correspondant au compteur de round
+			start_i : in std_logic;
+			done_o : out std_logic; -- indique la fin du calcul
+			enableCounter_o : out std_logic;
+			enableInvMixColumns_o : out std_logic;
+			enableOutput_o : out std_logic; -- autorise ou non l'envoie des données dechifree
+			enableRoundcomputing_o : out std_logic; -- autorise ou non InvSubBytes et InvShiftRows
+			getciphertext_o : out std_logic;
+			resetCounter_o : out std_logic
+		);
+	end component;
+
+	signal resetb_is, start_is : std_logic;
+	signal clock_is : std_logic := '0';
+	signal round_is : bit4;
+	signal enableCounter_os, done_os, enableInvMixColumns_os, enableOutput_os, enableRoundComputing_os, getciphertext_os, resetCounter_os : std_logic;
+
+	begin 
+		DUT : FSM_InvAES port map (
+			clock_i => clock_is,
+			resetb_i => resetb_is,
+			round_i => round_is,
+			start_i => start_is,
+			done_o => done_os,
+			enableCounter_o => enableCounter_os,
+			enableInvMixColumns_o => enableInvMixColumns_os,
+			enableOutput_o => enableOutput_os,
+			enableRoundComputing_o => enableRoundComputing_os,
+			getciphertext_o => getciphertext_os,
+			resetCounter_o => resetCounter_os
+		);
+		
+resetb_is <= '1', '0' after 30 ns, '1' after 40 ns;
+start_is <= '0', '1' after 50 ns, '0' after 200 ns;
+clock_is <= not clock_is after 25 ns;
+round_is <= "1010" after 100 ns, "1001" after 150 ns, "1000" after 200 ns, "0111" after 250 ns, "0110" after 300 ns, "0101" after 350 ns, "0100" after 400 ns, "0011" after 450 ns, "0010" after 500 ns, "0001" after 550 ns, "0000" after 600 ns;
+		
+end architecture FSM_InvAES_tb_arch;
+
+configuration FSM_InvAES_tb_conf of FSM_InvAES_tb is
+	for FSM_InvAES_tb_arch
+		for DUT : FSM_InvAES
+			use entity source.FSM_InvAES(FSM_InvAES_Moore_arch);
+		end for;
+	end for;
+end FSM_InvAES_tb_conf;	
+		

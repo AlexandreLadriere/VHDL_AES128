@@ -1,0 +1,13 @@
+------------------------------------------------------------------------------------------------
+-- Author:			Alexandre LADRIERE
+-- Name:			Conversion.vhd
+-- Date of creation:		12/12/2018
+-- Date of modification:	12/12/2018
+-- Description:			Conversion type_state/bit128 and 128bit/type_state
+------------------------------------------------------------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+library AESLibrary;
+use AESLibrary.state_definition_package.all;
+library source;
